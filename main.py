@@ -4,9 +4,8 @@ from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
-headers = {
-    'User-Agent': 'Mozilla/5.0'
-}
+# 🔐 La tua API Key di ScraperAPI
+api_key = "INSERISCI_LA_TUA_API_KEY_TRA_VIRGOLETTE"
 
 @app.route('/dati', methods=['GET'])
 def estrai_dati():
@@ -14,15 +13,15 @@ def estrai_dati():
     if not slug:
         return jsonify({"error": "Missing slug"}), 400
 
-    url = f"https://it.investing.com/equities/{slug}-ratios"
-    api_key = "38d5cb26de37e1c35bb61c8d50406aaa"
-    proxy_url = f"http://api.scraperapi.com?api_key={api_key}&url={url}"
+    # 🌐 URL finale tramite ScraperAPI
+    target_url = f"https://it.investing.com/equities/{slug}-ratios"
+    url = f"http://api.scraperapi.com/?api_key={api_key}&url={target_url}&country_code=it"
 
     try:
-        res = requests.get(proxy_url, headers=headers)
+        res = requests.get(url, timeout=20)
         soup = BeautifulSoup(res.text, 'html.parser')
-
         tabella = soup.find('table')
+
         if not tabella:
             return jsonify({"error": "Table not found"}), 404
 
@@ -40,9 +39,9 @@ def estrai_dati():
 
                 if "Diluted EPS" in nome:
                     valori["Diluted EPS"] = valore
-                elif "EPS (MRQ) vs" in nome:
+                elif "EPS(MRQ)" in nome:
                     valori["EPS YoY MRQ"] = valore
-                elif "Sales (MRQ) vs" in nome:
+                elif "Sales (MRQ)" in nome:
                     valori["Sales YoY MRQ"] = valore
 
         return jsonify(valori)
@@ -50,9 +49,8 @@ def estrai_dati():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# ✅ Necessario per il corretto deploy su Render
 if __name__ == '__main__':
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
-
-
