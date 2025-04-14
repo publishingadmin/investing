@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 app = Flask(__name__)
 
 # 🔐 La tua API Key di ScraperAPI
-api_key = "INSERISCI_LA_TUA_API_KEY_TRA_VIRGOLETTE"
+api_key = "38d5cb26de37e1c35bb61c8d50406aaa"
 
 @app.route('/dati', methods=['GET'])
 def estrai_dati():
