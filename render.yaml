@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: estrai-valori-investing
+    env: python
+    buildCommand: ""
+    startCommand: "python main.py"
+    plan: free
+    envVars: []
