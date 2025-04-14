@@ -20,6 +20,11 @@ def estrai_dati():
     try:
         res = requests.get(url, timeout=20)
         soup = BeautifulSoup(res.text, 'html.parser')
+
+        print("DEBUG HTML INIZIO ========")
+        print(soup.prettify())
+        print("DEBUG HTML FINE =========")
+
         tabella = soup.find('table')
 
         if not tabella:
